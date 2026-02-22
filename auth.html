@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kirjaudu</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- TÄMÄ on tärkein: selaimessa toimiva Supabase versio -->
+<script src="https://unpkg.com/@supabase/supabase-js@1.35.7/dist/umd/supabase.js"></script>
 
 <style>
 body{
@@ -15,29 +16,32 @@ display:flex;
 justify-content:center;
 align-items:center;
 background:#111827;
-font-family:Arial;
+font-family:Arial, Helvetica, sans-serif;
 color:white;
 }
 
-.login{
+.box{
 background:#1f2937;
 padding:30px;
-border-radius:12px;
+border-radius:14px;
 width:300px;
 text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
 }
 
 input{
 width:100%;
 padding:12px;
-margin:10px 0;
+margin:8px 0;
 border-radius:8px;
 border:none;
+font-size:15px;
 }
 
 button{
 width:100%;
 padding:12px;
+margin-top:10px;
 border:none;
 border-radius:10px;
 background:#22c55e;
@@ -45,38 +49,46 @@ color:white;
 font-size:16px;
 cursor:pointer;
 }
+
+button:hover{
+background:#16a34a;
+}
 </style>
 </head>
 
 <body>
 
-<div class="login">
-<h2>Kirjaudu sisään</h2>
+<div class="box">
+<h2>Kirjaudu</h2>
 
 <input id="email" placeholder="Sähköposti">
 <input id="password" type="password" placeholder="Salasana">
 
 <button onclick="login()">Kirjaudu</button>
-<p id="msg"></p>
 </div>
 
 <script>
-const SUPABASE_URL = "PASTE_TÄHÄN_PROJECT_URL";
-const SUPABASE_KEY = "PASTE_TÄHÄN_PUBLISHABLE_KEY";
+/* yhdistetään Supabaseen */
+const supabaseClient = supabase.createClient(
+  "https://ffrfdlfhejcezsnhfqcl.supabase.co",
+  "sb_publishable_pwMiK_GvtlVNILSaDSfHxg_QDTYY2SN"
+);
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+/* kirjautuminen */
 async function login(){
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabaseClient.auth.signIn({
+    email: email,
+    password: password
+  });
 
-if(error){
-document.getElementById("msg").innerText="Väärä salasana";
-}else{
-window.location.href="index.html";
-}
+  if(error){
+    alert("Väärä sähköposti tai salasana");
+  }else{
+    window.location.href = "index.html";
+  }
 }
 </script>
 
