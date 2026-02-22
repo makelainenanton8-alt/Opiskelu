@@ -198,7 +198,25 @@ function showSolution(){
 document.getElementById("solution").style.display="block";
 }
 
-checkUser();
+async function init() {
+  const { data, error } = await supabase.auth.getSession();
+
+  // jos tullaan reset-linkistä
+  const hash = window.location.hash;
+  if (hash.includes("access_token")) {
+    document.getElementById("loginScreen").style.display="flex";
+    alert("Aseta uusi salasana kirjautumalla sisään.");
+    return;
+  }
+
+  if(data.session){
+    document.getElementById("app").style.display="block";
+  } else {
+    document.getElementById("loginScreen").style.display="flex";
+  }
+}
+
+init();
 </script>
 
 </body>
