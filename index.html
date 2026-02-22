@@ -1,1 +1,132 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oma Opiskelu</title>
 
+<style>
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:#f3f4f6;
+display:flex;
+height:100vh;
+}
+
+/* vasen sivupalkki /
+.sidebar{
+width:260px;
+background:#111827;
+color:white;
+padding:20px;
+overflow-y:auto;
+}
+
+.sidebar h2{
+margin-top:0;
+}
+
+.chapter{
+padding:12px;
+margin-bottom:8px;
+background:#1f2937;
+border-radius:8px;
+cursor:pointer;
+}
+
+.chapter:hover{
+background:#374151;
+}
+
+/ pääalue /
+.main{
+flex:1;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:14px;
+max-width:650px;
+width:100%;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+img{
+max-width:100%;
+border-radius:10px;
+}
+
+button{
+margin-top:15px;
+padding:12px 18px;
+font-size:16px;
+border:none;
+border-radius:10px;
+background:#16a34a;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#15803d;
+}
+
+#solution{
+display:none;
+margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2>Oppiaineet</h2>
+
+<div class="chapter" onclick="loadTask('bio1')">Biologia 1.1</div>
+<div class="chapter" onclick="loadTask('bio2')">Biologia 1.2</div>
+
+</div>
+
+<div class="main">
+<div class="card">
+<h2 id="title">Valitse kappale vasemmalta</h2>
+
+<img id="taskImage" src="" alt="">
+
+<div id="solution">
+<h3>Malliratkaisu</h3>
+<img id="solutionImage" src="">
+</div>
+
+<button onclick="showSolution()">Näytä malliratkaisu</button>
+
+</div>
+</div>
+
+<script>
+function loadTask(chapter){
+document.getElementById("title").innerText="Tehtävä - "+chapter;
+
+/ väliaikainen esimerkkikuva */
+document.getElementById("taskImage").src="https://via.placeholder.com/600x800?text=Tehtävä";
+document.getElementById("solutionImage").src="https://via.placeholder.com/600x800?text=Ratkaisu";
+
+document.getElementById("solution").style.display="none";
+}
+
+function showSolution(){
+document.getElementById("solution").style.display="block";
+}
+</script>
+
+</body>
+</html>
