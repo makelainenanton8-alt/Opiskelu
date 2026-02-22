@@ -1,1 +1,34 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<title>Kirjautuminen...</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body style="background:#111827;color:white;font-family:Arial;display:flex;align-items:center;justify-content:center;height:100vh">
+
+<h2>Kirjaudutaan sisään...</h2>
+
+<script>
+const SUPABASE_URL = "https://ffrfdlfhejcezsnhfqcl.supabase.co";
+const SUPABASE_KEY = "sb_publishable_pwMiK_GvtlVNILSaDSfHxg_QDTYY2SN";
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function handleAuth() {
+
+  // TÄRKEÄ: ottaa tokenin URL:sta talteen
+  const { data, error } = await supabase.auth.exchangeCodeForSession(window.location.href);
+
+  // kun valmis → takaisin pääsivulle
+  window.location.href = "/";
+}
+
+handleAuth();
+</script>
+
+</body>
+</html>
