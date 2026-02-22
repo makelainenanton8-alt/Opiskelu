@@ -4,13 +4,63 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oma Opiskelu</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 body{
 margin:0;
 font-family:Arial, Helvetica, sans-serif;
-background:#f3f4f6;
-display:flex;
+background:#111827;
+color:white;
+}
+
+/* LOGIN */
+#loginScreen{
+display:none;
 height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.loginbox{
+background:#1f2937;
+padding:30px;
+border-radius:12px;
+width:300px;
+text-align:center;
+}
+
+.loginbox input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:8px;
+}
+
+.loginbox button{
+width:100%;
+padding:12px;
+background:#22c55e;
+border:none;
+border-radius:10px;
+color:white;
+font-size:16px;
+}
+
+/* APP */
+#app{
+display:none;
+height:100vh;
+background:#f3f4f6;
+color:black;
+}
+
+.container{
+display:flex;
+height:100%;
 }
 
 .sidebar{
@@ -18,7 +68,6 @@ width:260px;
 background:#111827;
 color:white;
 padding:20px;
-overflow-y:auto;
 }
 
 .chapter{
@@ -36,10 +85,8 @@ background:#374151;
 .main{
 flex:1;
 display:flex;
-flex-direction:column;
-align-items:center;
 justify-content:center;
-padding:20px;
+align-items:center;
 }
 
 .card{
@@ -48,8 +95,12 @@ padding:20px;
 border-radius:14px;
 max-width:650px;
 width:100%;
-box-shadow:0 10px 25px rgba(0,0,0,0.1);
 text-align:center;
+}
+
+img{
+max-width:100%;
+border-radius:10px;
 }
 
 button{
@@ -60,7 +111,6 @@ border:none;
 border-radius:10px;
 background:#16a34a;
 color:white;
-cursor:pointer;
 }
 
 #solution{
@@ -69,24 +119,74 @@ margin-top:20px;
 }
 </style>
 </head>
+
 <body>
-<div class="sidebar">
-<h2>Oppiaineet</h2>
-<div class="chapter" onclick="loadTask('bio1')">Biologia 1.1</div>
-<div class="chapter" onclick="loadTask('bio2')">Biologia 1.2</div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="loginbox">
+    <h2>Kirjaudu sisään</h2>
+    <input id="email" placeholder="Sähköposti">
+    <input id="password" type="password" placeholder="Salasana">
+    <button onclick="login()">Kirjaudu</button>
+  </div>
 </div>
-<div class="main">
-<div class="card">
-<h2 id="title">Valitse kappale vasemmalta</h2>
-<img id="taskImage" src="">
-<div id="solution">
-<h3>Malliratkaisu</h3>
-<img id="solutionImage" src="">
+
+<!-- APP -->
+<div id="app">
+  <div class="container">
+    <div class="sidebar">
+      <h2>Oppiaineet</h2>
+      <div class="chapter" onclick="loadTask('bio1')">Biologia 1.1</div>
+      <div class="chapter" onclick="loadTask('bio2')">Biologia 1.2</div>
+    </div>
+
+    <div class="main">
+      <div class="card">
+        <h2 id="title">Valitse kappale vasemmalta</h2>
+        <img id="taskImage">
+        <div id="solution">
+          <h3>Malliratkaisu</h3>
+          <img id="solutionImage">
+        </div>
+        <button onclick="showSolution()">Näytä malliratkaisu</button>
+      </div>
+    </div>
+  </div>
 </div>
-<button onclick="showSolution()">Näytä malliratkaisu</button>
-</div>
-</div>
+
 <script>
+const supabase = window.supabase.createClient(
+"https://ffrfdlfhejcezsnhfqcl.supabase.co",
+"sb_publishable_pwMiK_GvtlVNILSaDSfHxg_QDTYY2SN"
+);
+
+async function checkUser(){
+const { data } = await supabase.auth.getSession();
+
+if(data.session){
+document.getElementById("app").style.display="block";
+}else{
+document.getElementById("loginScreen").style.display="flex";
+}
+}
+
+async function login(){
+const email=document.getElementById("email").value;
+const password=document.getElementById("password").value;
+
+const { error } = await supabase.auth.signInWithPassword({
+email,
+password
+});
+
+if(error){
+alert("Väärä sähköposti tai salasana");
+}else{
+location.reload();
+}
+}
+
 function loadTask(chapter){
 document.getElementById("title").innerText="Tehtävä - "+chapter;
 document.getElementById("taskImage").src="https://via.placeholder.com/600x800?text=Tehtävä";
@@ -97,40 +197,9 @@ document.getElementById("solution").style.display="none";
 function showSolution(){
 document.getElementById("solution").style.display="block";
 }
+
+checkUser();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://ffrfdlfhejcezsnhfqcl.supabase.co";
-const SUPABASE_KEY = "sb_publishable_pwMiK_GvtlVNILSaDSfHxg_QDTYY2SN";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-async function checkLogin() {
-  const { data } = await supabase.auth.getSession();
-  if (!data.session) {
-    document.body.innerHTML = `
-    <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#111827;color:white;font-family:Arial">
-      <div style="background:#1f2937;padding:30px;border-radius:12px;text-align:center;width:300px">
-        <h2>Kirjaudu sisään</h2>
-        <input id="email" placeholder="Sähköposti" style="width:100%;padding:10px;margin:10px 0;border-radius:8px;border:none">
-        <input id="password" type="password" placeholder="Salasana" style="width:100%;padding:10px;margin:10px 0;border-radius:8px;border:none">
-        <button onclick="login()" style="width:100%">Kirjaudu</button>
-      </div>
-    </div>`;
-  }
-}
-
-async function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) alert("Väärä sähköposti tai salasana");
-  else location.reload();
-}
-
-checkLogin();
-</script>
 </body>
 </html>
-:::
