@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oma Opiskelu</title>
-
 <style>
 body{
 margin:0;
@@ -14,17 +13,12 @@ display:flex;
 height:100vh;
 }
 
-/* vasen sivupalkki /
 .sidebar{
 width:260px;
 background:#111827;
 color:white;
 padding:20px;
 overflow-y:auto;
-}
-
-.sidebar h2{
-margin-top:0;
 }
 
 .chapter{
@@ -39,7 +33,6 @@ cursor:pointer;
 background:#374151;
 }
 
-/ pääalue /
 .main{
 flex:1;
 display:flex;
@@ -59,11 +52,6 @@ box-shadow:0 10px 25px rgba(0,0,0,0.1);
 text-align:center;
 }
 
-img{
-max-width:100%;
-border-radius:10px;
-}
-
 button{
 margin-top:15px;
 padding:12px 18px;
@@ -75,57 +63,42 @@ color:white;
 cursor:pointer;
 }
 
-button:hover{
-background:#15803d;
-}
-
 #solution{
 display:none;
 margin-top:20px;
 }
 </style>
 </head>
-
 <body>
-
 <div class="sidebar">
 <h2>Oppiaineet</h2>
-
 <div class="chapter" onclick="loadTask('bio1')">Biologia 1.1</div>
 <div class="chapter" onclick="loadTask('bio2')">Biologia 1.2</div>
-
 </div>
-
 <div class="main">
 <div class="card">
 <h2 id="title">Valitse kappale vasemmalta</h2>
-
-<img id="taskImage" src="" alt="">
-
+<img id="taskImage" src="">
 <div id="solution">
 <h3>Malliratkaisu</h3>
 <img id="solutionImage" src="">
 </div>
-
 <button onclick="showSolution()">Näytä malliratkaisu</button>
-
 </div>
 </div>
-
 <script>
 function loadTask(chapter){
 document.getElementById("title").innerText="Tehtävä - "+chapter;
-
-/ väliaikainen esimerkkikuva */
 document.getElementById("taskImage").src="https://via.placeholder.com/600x800?text=Tehtävä";
 document.getElementById("solutionImage").src="https://via.placeholder.com/600x800?text=Ratkaisu";
-
 document.getElementById("solution").style.display="none";
 }
 
 function showSolution(){
 document.getElementById("solution").style.display="block";
 }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://ffrfdlfhejcezsnhfqcl.supabase.co";
@@ -135,37 +108,29 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function checkLogin() {
   const { data } = await supabase.auth.getSession();
-
   if (!data.session) {
     document.body.innerHTML = `
-      <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#111827;color:white;font-family:Arial">
-        <div style="background:#1f2937;padding:30px;border-radius:12px;text-align:center;width:300px">
-          <h2>Kirjaudu sisään</h2>
-          <input id="email" placeholder="Sähköposti" style="width:100%;padding:10px;margin:10px 0;border-radius:8px;border:none">
-          <input id="password" type="password" placeholder="Salasana" style="width:100%;padding:10px;margin:10px 0;border-radius:8px;border:none">
-          <button onclick="login()" style="width:100%">Kirjaudu</button>
-        </div>
-      </div>`;
+    <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#111827;color:white;font-family:Arial">
+      <div style="background:#1f2937;padding:30px;border-radius:12px;text-align:center;width:300px">
+        <h2>Kirjaudu sisään</h2>
+        <input id="email" placeholder="Sähköposti" style="width:100%;padding:10px;margin:10px 0;border-radius:8px;border:none">
+        <input id="password" type="password" placeholder="Salasana" style="width:100%;padding:10px;margin:10px 0;border-radius:8px;border:none">
+        <button onclick="login()" style="width:100%">Kirjaudu</button>
+      </div>
+    </div>`;
   }
 }
 
 async function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
-
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) alert("Väärä sähköposti tai salasana");
   else location.reload();
 }
 
 checkLogin();
 </script>
-
-</script>
-
 </body>
 </html>
+:::
